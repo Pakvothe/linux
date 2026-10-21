@@ -1626,14 +1626,17 @@
 			power-domains = <&mmcc MDSS_GDSC>;
 			resets = <&mmcc MDSS_BCR>;
 
+			/* mnoc: held around every MDSS AHB switch, as downstream */
 			clocks = <&mmcc MDSS_AHB_CLK>,
 				 <&mmcc MDSS_AXI_CLK>,
 				 <&mmcc MDSS_VSYNC_CLK>,
-				 <&mmcc MDSS_MDP_CLK>;
+				 <&mmcc MDSS_MDP_CLK>,
+				 <&mmcc MNOC_AHB_CLK>;
 			clock-names = "iface",
 				      "bus",
 				      "vsync",
-				      "core";
+				      "core",
+				      "mnoc";
 
 			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
 
@@ -2557,6 +2560,14 @@
 					};
 				};
 			};
+		};
+
+		/* APSS watchdog; address and bark interrupt from the downstream qcom,msm-watchdog node */
+		watchdog@17817000 {
+			compatible = "qcom,apss-wdt-sdm660", "qcom,kpss-wdt";
+			reg = <0x17817000 0x1000>;
+			clocks = <&sleep_clk>;
+			interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
 		};
 
 		gnoc: interconnect@17900000 {

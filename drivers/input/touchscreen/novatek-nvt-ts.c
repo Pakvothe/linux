@@ -386,7 +386,8 @@ static int nvt_ts_probe(struct i2c_client *client)
 		dev_info(dev, "probing in follower mode\n"); // REMOVEME
 		data->is_panel_follower = true;
 		data->panel_follower.funcs = &nvt_ts_follower_funcs;
-		drm_panel_add_follower(dev, &data->panel_follower);
+		/* The panel may not be registered yet: defer until it is. */
+		return drm_panel_add_follower(dev, &data->panel_follower);
 		/*
 		 * In this mode, we can't do anything more at this moment.
 		 * Need to wait for callbacks from panel.

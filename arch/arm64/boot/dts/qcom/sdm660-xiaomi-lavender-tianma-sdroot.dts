@@ -1,0 +1,22 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Redmi Note 7 (Tianma panel) booted from RAM with the root file system
+ * on the microSD card. The eMMC controller stays disabled, so nothing in
+ * this configuration can write the phone's internal storage.
+ */
+
+#include "sdm660-xiaomi-lavender-tianma.dts"
+
+/* Keep the layout the kernel installed on the phone uses, so that its
+ * /sys/fs/pstore shows this kernel's console after a forced restart.
+ */
+&{/reserved-memory/ramoops@a0000000} {
+	console-size = <0x200000>;
+	record-size = <0x0>;
+	ftrace-size = <0x0>;
+	pmsg-size = <0x200000>;
+};
+
+&sdhc_1 {
+	status = "disabled";
+};

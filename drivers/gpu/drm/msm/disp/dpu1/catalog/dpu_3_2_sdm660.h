@@ -241,7 +241,13 @@ static const struct dpu_perf_cfg sdm660_perf_data = {
 		{.rd_enable = 1, .wr_enable = 1},
 		{.rd_enable = 1, .wr_enable = 0}
 	},
-	.clk_inefficiency_factor = 200,
+	/*
+	 * 1080x2340@60 on the NT36672A (Redmi Note 7) leaves 21 blanking
+	 * lines where min_prefill_lines asks for 25. With 200 the MDP core
+	 * clock request is 306 MHz and rounds to 330 MHz, which is too slow
+	 * to prefill under load; 220 rounds it up to 412.5 MHz.
+	 */
+	.clk_inefficiency_factor = 220,
 	.bw_inefficiency_factor = 120,
 };
 

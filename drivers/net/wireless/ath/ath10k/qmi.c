@@ -95,10 +95,20 @@ static int ath10k_qmi_setup_msa_permissions(struct ath10k_qmi *qmi)
 
 	for (i = 0; i < qmi->nr_mem_region; i++) {
 		ret = ath10k_qmi_map_msa_permission(qmi, &qmi->mem_region[i]);
+		if (ret == -EINVAL) {
+			/* A previous instance of the driver left the region
+			 * assigned to the modem: unbind does not hand it back,
+			 * and handing it back while the firmware runs is an
+			 * XPU violation. It is already ours to use.
+			 */
+			ath10k_warn(qmi->ar, "msa region %d already assigned, reusing\n", i);
+			ret = 0;
+		}
 		if (ret)
 			goto err_unmap;
 	}
 
+	qmi->msa_mapped = true;
 	return 0;
 
 err_unmap:
@@ -111,11 +121,12 @@ static void ath10k_qmi_remove_msa_permission(struct ath10k_qmi *qmi)
 {
 	int i;
 
-	if (qmi->msa_fixed_perm)
+	if (qmi->msa_fixed_perm || !qmi->msa_mapped)
 		return;
 
 	for (i = 0; i < qmi->nr_mem_region; i++)
 		ath10k_qmi_unmap_msa_permission(qmi, &qmi->mem_region[i]);
+	qmi->msa_mapped = false;
 }
 
 static int ath10k_qmi_msa_mem_info_send_sync_msg(struct ath10k_qmi *qmi)

@@ -24,6 +24,23 @@
 	compatible = "xiaomi,lavender", "qcom,sdm660";
 	chassis-type = "handset";
 
+	/*
+	 * The stock ABL picks an appended DTB by these three ids (those of
+	 * the vendor "SDM 660 PM660 + PM660L MTP F7A" DTB) and then applies
+	 * the entry of the dtbo partition on top of it; when the overlay
+	 * does not apply, it does not boot. The stock dtbo has one fragment
+	 * that targets "slim_aud", so give it a node to land on. Needs -@.
+	 */
+	qcom,msm-id = <317 0x0>;
+	qcom,board-id = <0x00020008 0x0>;
+	qcom,pmic-id = <0x1001b 0x101011a 0x0 0x0>,
+		       <0x1001b 0x201011a 0x0 0x0>,
+		       <0x1001b 0x102001a 0x0 0x0>;
+
+	slim_aud: abl-dtbo-sink {
+		status = "disabled";
+	};
+
 	aliases {
 		serial0 = &blsp1_uart2; /* Debug UART */
 		serial1 = &blsp2_uart1; /* Bluetooth UART */

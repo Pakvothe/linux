@@ -327,6 +327,10 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm660-xiaomi-jason.dtb
 dtb-$(CONFIG_ARCH_QCOM)	+= sdm660-xiaomi-lavender-shenchao.dtb
 dtb-$(CONFIG_ARCH_QCOM)	+= sdm660-xiaomi-lavender-tianma.dtb
 dtb-$(CONFIG_ARCH_QCOM)	+= sdm660-xiaomi-lavender-boe.dtb
+# The stock ABL applies the dtbo partition's overlay: these need /__symbols__
+DTC_FLAGS_sdm660-xiaomi-lavender-boe := -@
+DTC_FLAGS_sdm660-xiaomi-lavender-shenchao := -@
+DTC_FLAGS_sdm660-xiaomi-lavender-tianma := -@
 dtb-$(CONFIG_ARCH_QCOM)	+= sdm660-xiaomi-platina.dtb
 dtb-$(CONFIG_ARCH_QCOM)	+= sdm670-google-bonito-tianma.dtb
 dtb-$(CONFIG_ARCH_QCOM)	+= sdm670-google-sargo.dtb

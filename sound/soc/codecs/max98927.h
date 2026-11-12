@@ -253,6 +253,8 @@
 
 struct max98927_priv {
 	struct regmap *regmap;
+	struct regmap *raw_regmap;
+	bool is_max98937;
 	struct snd_soc_component *component;
 	struct max98927_pdata *pdata;
 	struct gpio_desc *reset_gpio; 
